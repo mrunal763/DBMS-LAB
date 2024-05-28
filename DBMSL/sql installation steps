@@ -1,0 +1,20 @@
+>sudo apt install mysql-server     # for installation 
+
+>sudo systemctl start mysql.service  # starting the mysql server
+ 
+>sudo mysql    # for mysql prompt
+
+_______________________________________________
+
+create database command 
+
+> create database client;   # creating database named client
+> use client   # selecting perticular database
+> CREATE TABLE Persons (PersonID int, LastName varchar(255),FirstName varchar(255),Address varchar(255),City varchar(255) );
+> insert into Persons values(1, 'la','fa','addr','Pune');
+> insert into Persons values(2, 'xx','yy','zz','Pimpri');
+> select * from Persons;
+> update  Persons set LastName = 'pp' where PersonID = 1;
+> select * from Persons;
+> delete from Persons where PersonID =1 ;
+> select * from Persons;

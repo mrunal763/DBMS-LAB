@@ -1,0 +1,114 @@
+use ASS9;
+
+db.createCollection("orderinfo");
+
+db.orderinfo.insertMany([
+{ 
+cust_id:123 ,
+cust_name:"abc", 
+status:"A", 
+price:250 
+},
+{ 
+cust_id:124,
+cust_name:"xyz", 
+status:"A", 
+price:950 
+},
+{ 
+cust_id:125,
+cust_name:"pqr", 
+status:"B", 
+price:1000 
+},
+{ 
+cust_id:126,
+cust_name:"ijk", 
+status:"A", 
+price:1100 
+},
+{ 
+cust_id:127,
+cust_name:"xyu", 
+status:"A", 
+price:870 
+}
+]
+);
+
+db.orderinfo.aggregate([
+  { $match: { status: "A" } },
+  { $group: { _id: "$cust_name", avg_price: { $avg: "$price" } } }
+])
+
+db.orderinfo.find({ price: { $gte: 100, $lte: 1000 } }, { status: 1 })
+
+db.orderinfo.find({}, { _id: 0 })
+
+db.orderinfo.createIndex({ cust_name: 1 })
+db.orderinfo.find({ status: "A" }, { avg_price: { $avg: "$price" } })
+
+db.createCollection("movies")
+db.movies.insertOne(
+{
+  name: "Movie1",
+  type: "action",
+  budget: 1000000,
+  producer: {
+    name: "producer1",
+    address: "PUNE"
+ }
+})
+db.movies.insertOne(
+{
+  name: "Movie2",
+  type: "comedy",
+  budget: 800000,
+  producer: {
+    name: "producer2",
+    address: "Los Angeles"
+  }
+})
+db.movies.insertOne(
+{
+  name: "Documentary1",
+  type: "documentary",
+  budget: 50000,
+  producer: {
+    name: "producer3",
+    address: "New York"
+  }
+})
+db.movies.insertOne({
+  name: "Movie4",
+  type: "foreign",
+  budget: 1500000,
+  producer: {
+    name: "producer4",
+    address: "Paris"
+  }
+})
+db.movies.insertOne({
+  name: "SciFiMovie1",
+  type: "science fiction",
+  budget: 2000000,
+  producer: {
+    name: "producer5",
+    address: "London"
+  }
+})
+
+db.movies.find({ budget: { $gt: 100000 } }, { name: 1, _id: 0 })
+
+db.movies.find({ "producer.address": "PUNE" }, { "producer.name": 1, _id: 0 })
+
+db.movies.updateMany(
+  { type: "action" },
+  { $set: { type: "horror" } }
+)
+
+db.movies.find(
+  { "producer.name": "producer1" },
+  { "producer.name": 1, "producer.address": 1, _id: 0 }
+)
+

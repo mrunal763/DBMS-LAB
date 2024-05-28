@@ -1,0 +1,103 @@
+create table oldroll(roll int,Name varchar(20));
+ 
+create table newroll(roll int,Name varchar(20));
+ 
+insert into newroll values(2,'dhanshree');
+insert into newroll values(5,'asmita');
+
+insert into oldroll values(2,'Hema');
+insert into oldroll values(5,'Aditi');
+insert into oldroll values(4,'srushti');
+insert into oldroll values(5,'asmita');
+
+
+select * from newroll;
+select * from oldroll;
+
+delimiter $$
+
+create procedure rolllist()
+    begin
+    declare a int;
+    declare a1 varchar(10);
+    declare b int;
+    declare b1 varchar(10);
+    declare done int default false;
+    declare c1 cursor for select roll,name from oldroll;
+    declare c2 cursor for select roll,name from newroll;
+    declare continue handler for not found set done=true;
+    open c1;
+    open c2;
+    loop1:loop
+    fetch c1 into a,a1;
+    if done then
+    leave loop1;
+    end if;
+    loop2:loop
+    fetch c2 into b,b1;
+    if done then
+    insert into newroll values(a,a1);
+    leave loop2;
+    end if;
+    if a=b then
+    leave loop2;
+    end if;
+    end loop;
+    end loop;
+    close c1;
+    close c2;
+    end $$
+ 
+
+call rolllist() $$
+ 
+select * from newroll $$
+
+
+*******************-- another code***************
+
+CREATE PROCEDURE rolllist1()
+BEGIN
+    DECLARE a INT;
+    DECLARE a1 VARCHAR(20);
+    DECLARE b INT;
+    DECLARE b1 VARCHAR(20);
+    DECLARE done INT DEFAULT FALSE;
+    
+    DECLARE c1 CURSOR FOR SELECT roll, name FROM oldroll;
+    DECLARE c2 CURSOR FOR SELECT roll, name FROM newroll;
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    OPEN c1;
+    OPEN c2;
+    
+    read_loop: LOOP
+        FETCH c1 INTO a, a1;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        
+        inner_loop: LOOP
+            FETCH c2 INTO b, b1;
+            IF done THEN
+                LEAVE inner_loop;
+            END IF;
+            
+            IF a = b THEN
+                LEAVE inner_loop;
+            END IF;
+        END LOOP inner_loop;
+        
+        IF b IS NULL THEN
+            INSERT INTO newroll VALUES (a, a1);
+        END IF;
+    END LOOP read_loop;
+    
+    CLOSE c1;
+    CLOSE c2;
+    
+END $$
+ 
+
+

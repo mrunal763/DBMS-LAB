@@ -1,0 +1,71 @@
+use department
+
+db.createCollection("teacher")
+
+db.teacher.insertMany([
+
+     {
+         "name": "John Doe",
+         "department": "CSE",
+         "experience": 10,
+         "salary": 100000
+     },
+     {
+         "name": "Jane Danny",
+         "department": "ECE",
+         "experience": 5,
+         "salary": 750    },
+     {
+         "name": "Peter Smith",
+         "department": "CSE",
+         "experience": 8,
+         "salary": 90000
+     },
+     {
+         "name": "Sarah Jones",
+         "department": "ECE",
+         "experience": 6,
+         "salary": 80000
+     }
+ ])
+
+department> db.teacher.find()
+
+db.teacher.aggregate([
+     {
+         "$group": {
+             "_id": "$department",
+             "averageSalary": {
+                 "$avg": "$salary"
+             }
+         }
+     }
+ ])
+
+department> db.teacher.aggregate([
+     {
+         "$group": {
+             "_id": "$department",
+             "count": {
+                 "$sum": 1
+             }
+         }
+     }
+ ])
+
+department> db.teacher.aggregate([
+     {
+         "$group": {
+             "_id": "$department",
+             "minimumSalary": {
+                 "$min": "$salary"
+             }
+         }
+     }
+ ])
+
+db.teacher.createIndex({"department": 1})
+
+department> db.teacher.dropIndex({"department": 1})
+
+department> db.teacher.find()
